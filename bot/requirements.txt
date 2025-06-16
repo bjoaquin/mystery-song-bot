@@ -2,3 +2,4 @@ flask
 slack_sdk
 python-dotenv
 requests
+flask-cors

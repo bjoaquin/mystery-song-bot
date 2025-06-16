@@ -3,6 +3,7 @@ import re
 import base64
 import requests
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
@@ -11,6 +12,7 @@ from utils import get_track_info, is_correct_guess
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)  # esto habilita CORS para todos los endpoints
 client = WebClient(token=os.getenv("SLACK_BOT_TOKEN"))
 SLACK_CHANNEL_ID = os.getenv("SLACK_CHANNEL_ID")
 WEB_HOST_URL = os.getenv("WEB_HOST_URL")
