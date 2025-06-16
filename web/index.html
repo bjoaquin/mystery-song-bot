@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mystery Song</title>
+  <style>
+    body { background-color: #121212; color: #fff; text-align: center; font-family: sans-serif; }
+    iframe { margin-top: 60px; border-radius: 12px; }
+  </style>
+</head>
+<body>
+  <h1>🎧 Mystery Song 🎧</h1>
+
+  <script>
+    const pathParts = window.location.pathname.split("/");
+    const trackId = pathParts[pathParts.length - 1];
+    const embedUrl = `https://open.spotify.com/embed/track/${trackId}`;
+
+    const iframe = document.createElement("iframe");
+    iframe.src = embedUrl;
+    iframe.width = 300;
+    iframe.height = 80;
+    iframe.frameBorder = 0;
+    iframe.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+    
+    document.body.appendChild(iframe);
+  </script>
+</body>
+</html>
