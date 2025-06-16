@@ -8,7 +8,7 @@
     body {
       background-color: #121212;
       color: white;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -17,27 +17,20 @@
       margin: 0;
       text-align: center;
     }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
+    h1 { font-size: 2rem; margin-bottom: 1rem; }
     button {
       background-color: #1DB954;
       color: white;
       border: none;
-      border-radius: 50px;
-      padding: 15px 30px;
+      border-radius: 30px;
+      padding: 15px 25px;
       font-size: 1.1rem;
       cursor: pointer;
       margin-top: 2rem;
     }
-
     button:hover {
-      background-color: #17a84b;
+      background-color: #1aa34a;
     }
-
     footer {
       margin-top: 3rem;
       font-size: 0.85rem;
@@ -46,11 +39,11 @@
   </style>
 </head>
 <body>
-  <h1>🔊 Mystery Song Preview</h1>
-  <p>Press play to listen. Can you guess the song?</p>
+  <h1>🎵 Mystery Song</h1>
+  <p>Press play to hear a preview and guess the song!</p>
 
-  <button id="play-button">▶️ Play Preview</button>
-  <audio id="preview-audio"></audio>
+  <button id="play-btn">▶️ Play Preview</button>
+  <audio id="audio-player"></audio>
 
   <footer>
     Created by @bjoaquin | Powered by Spotify
@@ -58,27 +51,23 @@
 
   <script>
     const trackId = window.location.pathname.split("/").pop();
-    const token = "YOUR_SPOTIFY_TOKEN_HERE"; // 👈 reemplazar por un token válido o usar desde backend proxy
+    const apiBase = "https://mystery-song-bot.onrender.com"; // tu backend en Render
 
-    async function getPreviewUrl(trackId) {
-      const res = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+    async function getPreviewUrl(id) {
+      const res = await fetch(`${apiBase}/preview/${id}`);
       const data = await res.json();
       return data.preview_url;
     }
 
-    document.getElementById("play-button").addEventListener("click", async () => {
-      const audio = document.getElementById("preview-audio");
+    document.getElementById("play-btn").addEventListener("click", async () => {
+      const audio = document.getElementById("audio-player");
       if (!audio.src) {
-        const previewUrl = await getPreviewUrl(trackId);
-        if (!previewUrl) {
-          alert("⚠️ No preview available for this song.");
+        const url = await getPreviewUrl(trackId);
+        if (!url) {
+          alert("⚠️ No preview available.");
           return;
         }
-        audio.src = previewUrl;
+        audio.src = url;
       }
       audio.play();
     });

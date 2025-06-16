@@ -1,5 +1,7 @@
 import os
 import re
+import base64
+import requests
 from flask import Flask, request, jsonify
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
@@ -73,6 +75,36 @@ def slack_events():
                     print("Slack error:", e)
 
     return jsonify({"ok": True}), 200
+
+@app.route("/preview/<track_id>")
+def get_preview(track_id):
+    # 1. Obtener token desde Spotify
+    client_id = os.getenv("SPOTIFY_CLIENT_ID")
+    client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
+
+    auth_header = base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
+    token_response = requests.post(
+        "https://accounts.spotify.com/api/token",
+        headers={"Authorization": f"Basic {auth_header}"},
+        data={"grant_type": "client_credentials"}
+    )
+
+    if not token_response.ok:
+        return jsonify({"error": "Failed to authenticate with Spotify"}), 500
+
+    token = token_response.json().get("access_token")
+
+    # 2. Buscar track info
+    track_response = requests.get(
+        f"https://api.spotify.com/v1/tracks/{track_id}",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+
+    if not track_response.ok:
+        return jsonify({"error": "Track not found"}), 404
+
+    data = track_response.json()
+    return jsonify({"preview_url": data.get("preview_url")})
 
 if __name__ == "__main__":
     import os
