@@ -53,6 +53,10 @@ def post_song():
 def slack_events():
     data = request.json
 
+    # This is critical:
+    if data.get("type") == "url_verification":
+        return jsonify({"challenge": data["challenge"]})
+
     # URL verification challenge
     if data.get("type") == "url_verification":
         return jsonify({"challenge": data["challenge"]})
