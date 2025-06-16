@@ -4,7 +4,9 @@ import requests
 def get_track_info(track_id):
     try:
         url = f"https://open.spotify.com/oembed?url=https://open.spotify.com/track/{track_id}"
+        print("🔍 Fetching:", url)
         response = requests.get(url)
+        print("📡 Status:", response.status_code)
         if not response.ok:
             return None
         data = response.json()
