@@ -1,25 +1,39 @@
 import re
 import requests
+import base64
+import os
+
+def get_spotify_token():
+    auth_str = f"{os.getenv('SPOTIFY_CLIENT_ID')}:{os.getenv('SPOTIFY_CLIENT_SECRET')}"
+    b64_auth = base64.b64encode(auth_str.encode()).decode()
+    headers = {
+        "Authorization": f"Basic {b64_auth}"
+    }
+    data = {
+        "grant_type": "client_credentials"
+    }
+    response = requests.post("https://accounts.spotify.com/api/token", headers=headers, data=data)
+    if response.ok:
+        return response.json()["access_token"]
+    return None
 
 def get_track_info(track_id):
-    try:
-        url = f"https://open.spotify.com/oembed?url=https://open.spotify.com/track/{track_id}"
-        print("🔍 Fetching:", url)
-        response = requests.get(url)
-        print("📡 Status:", response.status_code)
-        if not response.ok:
-            return None
-        data = response.json()
-        title_artist = data["title"]
-        match = re.match(r"(.+?) by (.+)", title_artist)
-        if not match:
-            return None
-        return {
-            "title": match.group(1).strip(),
-            "artist": match.group(2).strip()
-        }
-    except:
+    token = get_spotify_token()
+    if not token:
         return None
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    response = requests.get(f"https://api.spotify.com/v1/tracks/{track_id}", headers=headers)
+    if not response.ok:
+        return None
+
+    data = response.json()
+    return {
+        "title": data["name"],
+        "artist": data["artists"][0]["name"]
+    }
 
 def is_correct_guess(guess, title, artist):
     guess = guess.lower()
