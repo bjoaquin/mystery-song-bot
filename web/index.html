@@ -3,27 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <title>Mystery Song</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { background-color: #121212; color: #fff; text-align: center; font-family: sans-serif; }
-    iframe { margin-top: 60px; border-radius: 12px; }
+    body {
+      background: linear-gradient(135deg, #1DB954 0%, #191414 100%);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      max-width: 500px;
+    }
+
+    .player-container {
+      margin-top: 2rem;
+      overflow: hidden;
+      border-radius: 12px;
+      width: 320px;
+      height: 80px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
-  <h1>🎧 Mystery Song 🎧</h1>
+  <h1>🎧 Mystery Song</h1>
+  <p>Listen to this short preview and try to guess the title and artist in Slack!</p>
+
+  <div class="player-container">
+    <iframe id="spotify-player"
+            width="100%"
+            height="100%"
+            frameborder="0"
+            allowtransparency="true"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+    </iframe>
+  </div>
+
+  <footer>
+    Powered by Spotify & Slack | Created by @bjoaquin
+  </footer>
 
   <script>
     const pathParts = window.location.pathname.split("/");
     const trackId = pathParts[pathParts.length - 1];
-    const embedUrl = `https://open.spotify.com/embed/track/${trackId}`;
+    const embedUrl = `https://open.spotify.com/embed/track/${trackId}?utm_source=generator`;
 
-    const iframe = document.createElement("iframe");
-    iframe.src = embedUrl;
-    iframe.width = 300;
-    iframe.height = 80;
-    iframe.frameBorder = 0;
-    iframe.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
-    
-    document.body.appendChild(iframe);
+    // Set only the player area, cropping the top title/artist info
+    document.getElementById("spotify-player").src = embedUrl;
   </script>
 </body>
 </html>
