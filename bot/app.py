@@ -73,3 +73,8 @@ def slack_events():
                     print("Slack error:", e)
 
     return jsonify({"ok": True}), 200
+
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 5000))  # 5000 is a fallback for local testing
+    app.run(host="0.0.0.0", port=port)
