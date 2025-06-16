@@ -1,6 +1,6 @@
 import requests
 
-BOT_URL = "https://mystery-song-bot.onrender.com"  # Change to Render URL when deployed
+BOT_URL = "https://mystery-song-bot.onrender.com/post_song"  # Change to Render URL when deployed
 
 def extract_track_id(url_or_id):
     if "spotify.com/track/" in url_or_id:
