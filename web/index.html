@@ -69,6 +69,9 @@
         }
         audio.src = url;
       }
+      console.log("trackId", trackId);
+      console.log("API response", data);
+      console.log("preview_url", data.preview_url);
       audio.play();
     });
   </script>

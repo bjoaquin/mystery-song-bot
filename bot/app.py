@@ -106,6 +106,7 @@ def get_preview(track_id):
         return jsonify({"error": "Track not found"}), 404
 
     data = track_response.json()
+    print("🔎 Spotify data:", data)
     return jsonify({"preview_url": data.get("preview_url")})
 
 if __name__ == "__main__":
