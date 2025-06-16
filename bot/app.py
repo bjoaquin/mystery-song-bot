@@ -91,7 +91,10 @@ def get_preview(track_id):
         data={"grant_type": "client_credentials"}
     )
 
+    print("🔐 Token status:", token_response.status_code)
+
     if not token_response.ok:
+        print("❌ Error autenticando:", token_response.text)
         return jsonify({"error": "Failed to authenticate with Spotify"}), 500
 
     token = token_response.json().get("access_token")
@@ -101,6 +104,9 @@ def get_preview(track_id):
         f"https://api.spotify.com/v1/tracks/{track_id}",
         headers={"Authorization": f"Bearer {token}"}
     )
+
+    print("🎧 Track status:", track_response.status_code)
+    print("🎧 Track body:", track_response.text)
 
     if not track_response.ok:
         return jsonify({"error": "Track not found"}), 404
